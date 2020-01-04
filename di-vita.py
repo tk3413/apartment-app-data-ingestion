@@ -67,7 +67,7 @@ def apt_avail_dt_format(tree, item_num):
 def vita_page_format(tree): 
     path_num_pages = tree.xpath('/html/body/div/div[2]/div/section[2]/div[4]/div/div[8]/span/span/text()')
     total_num_pages = path_num_pages[0].strip()[10]
-    return total_num_pages
+    return int(total_num_pages)
 
 def formatter(format_type, tree, item_num):
     return {
@@ -95,7 +95,7 @@ def get_constant(key):
 def get_total_pages(): 
     page = requests.get(get_constant('base_url') + get_constant('default_query_params') + '&page=' + str(2))
     tree = html.fromstring(page.content)
-    total_num_pages = vita_page_format(tree)
+    total_num_pages = vita_page_format(tree) + 1
     print('total number of pages is: ' + str(total_num_pages))
     return total_num_pages
 
@@ -115,7 +115,13 @@ def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt
         "http://localhost:3000/apartments", 
         data = json.dumps(payload),
         headers = headers
-   )
+    )
+    print('post returned status code: ' + str(r.status_code))
+    if(str(r.status_code) == '201'):
+        print('new apartment or price changed for ' + apt_nm_cd + ' apt number: ' + apt_num)
+        return 1
+    else: 
+        return 0
 
 # main logic
 current_page_num = 1
@@ -127,6 +133,7 @@ now = datetime.now()
 formatted_now = now.strftime("%m/%d/%Y %H:%M:%S")
 print ('execution timestamp: ' + formatted_now)
 
+total_new_apartments = 0
 while(current_page_num < total_num_pages):
     # for each page, create a new tree to parse below
     print('\nPage: ' + str(current_page_num))
@@ -140,7 +147,7 @@ while(current_page_num < total_num_pages):
     
     # send each item to db via server
     while(item_num < 8): 
-        send_to_server(
+        total_new_apartments += send_to_server(
             get_constant('apt_nm_cd'),
             formatter('APT_NUM',      tree, item_num), 
             formatter('APT_TYPE',     tree, item_num),
@@ -151,3 +158,5 @@ while(current_page_num < total_num_pages):
         )
         item_num += 1
     current_page_num += 1
+
+print('\ntotal new apartments added from this execution: ' + str(total_new_apartments))
