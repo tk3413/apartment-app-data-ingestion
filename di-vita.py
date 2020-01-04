@@ -93,7 +93,7 @@ def get_constant(key):
         raise ValueError(key + ' was not found in list of constants')
 
 def get_total_pages(): 
-    page = requests.get('https://www.vitatysons.com/floor-plans/?floor=&max=&bedrooms=0&bedrooms=1&bedrooms=2&bedrooms=3&page=' + str(2) + '&min=&availability=')
+    page = requests.get(get_constant('base_url') + get_constant('default_query_params') + '&page=' + str(2))
     tree = html.fromstring(page.content)
     total_num_pages = vita_page_format(tree)
     print('total number of pages is: ' + str(total_num_pages))
@@ -120,14 +120,12 @@ def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt
 # main logic
 current_page_num = 1
 total_num_pages = get_total_pages()
-total_num_apartments = int(total_num_pages)*6
 base_url = get_constant('base_url')
 default_query_params = get_constant('default_query_params')
 
 now = datetime.now()
 formatted_now = now.strftime("%m/%d/%Y %H:%M:%S")
 print ('execution timestamp: ' + formatted_now)
-print('total number of apts for sale: ' + str(total_num_apartments))
 
 while(current_page_num < total_num_pages):
     # for each page, create a new tree to parse below
