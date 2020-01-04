@@ -32,7 +32,7 @@ def replace_all(text, replacements):
             as outlined in replacements (parameter)
             example: '1000'
     """
-    for i, j in replacements.iteritems():
+    for i, j in replacements.items():
         text = text.replace(i, j)
     return text
 
