@@ -95,7 +95,7 @@ def get_constant(key):
 def get_total_pages(): 
     page = requests.get(get_constant('base_url') + get_constant('default_query_params') + '&page=' + str(2))
     tree = html.fromstring(page.content)
-    total_num_pages = vita_page_format(tree) + 1
+    total_num_pages = vita_page_format(tree)
     print('total number of pages is: ' + str(total_num_pages))
     return total_num_pages
 
@@ -112,7 +112,7 @@ def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt
             "cret_ts":    cret_ts
     }
     r = requests.post(
-        "http://localhost:3000/apartments", 
+        "http://apartment-app-1265692259.us-east-1.elb.amazonaws.com/apartments", 
         data = json.dumps(payload),
         headers = headers
     )
@@ -134,14 +134,14 @@ formatted_now = now.strftime("%m/%d/%Y %H:%M:%S")
 print ('execution timestamp: ' + formatted_now)
 
 total_new_apartments = 0
-while(current_page_num < total_num_pages):
+while(current_page_num <= total_num_pages):
     # for each page, create a new tree to parse below
     print('\nPage: ' + str(current_page_num))
     page_param = '&page=' + str(current_page_num) + ''
     full_path = base_url + default_query_params + page_param
     page = requests.get(full_path)
     tree = html.fromstring(page.content)
-
+    print('hello')
     # 6 items per page, range of required values = [2, 7]
     item_num = 2
     
