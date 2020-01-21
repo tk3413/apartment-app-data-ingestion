@@ -99,7 +99,7 @@ def get_total_pages():
     print('total number of pages is: ' + str(total_num_pages))
     return total_num_pages
 
-def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt, cret_ts): 
+def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt): 
     print('sending to request to server for apt num: ' + apt_num)
     headers = { 'Content-Type': 'application/json' }
     payload = {
@@ -108,11 +108,11 @@ def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt
             "apt_type":   apt_type,
             "apt_size":   apt_size,
             "apt_price":  apt_price,
-            "apt_avl_dt": apt_avl_dt,
-            "cret_ts":    cret_ts
+            "apt_avl_dt": apt_avl_dt
     }
     r = requests.post(
         "http://apartment-app-1265692259.us-east-1.elb.amazonaws.com/apartments", 
+        # "http://localhost:3000/apartments",
         data = json.dumps(payload),
         headers = headers
     )
@@ -153,8 +153,7 @@ while(current_page_num <= total_num_pages):
             formatter('APT_TYPE',     tree, item_num),
             formatter('APT_SIZE',     tree, item_num),
             formatter('APT_PRICE',    tree, item_num),
-            formatter('APT_AVAIL_DT', tree, item_num),
-            formatted_now
+            formatter('APT_AVAIL_DT', tree, item_num)
         )
         item_num += 1
     current_page_num += 1
