@@ -43,9 +43,9 @@ def apt_num_format(tree, item_num):
 def apt_price_format(tree, item_num): 
     path_price = tree.xpath('//div[' + str(item_num) + ']/a/figure/figcaption/div/ul/li[4]/text()')
     apt_price = path_price[0].split()
-    replacements = { "/Month": "", "$": "" }
+    replacements = { "/Month": "", "$": "", ",": "" }
     apt_price_cleaned = replace_all(apt_price[1], replacements)
-    return str(apt_price_cleaned)
+    return int(apt_price_cleaned)
 
 def apt_type_format(tree, item_num):
     path_apt_type = tree.xpath('//div[' + str(item_num) + ']/a/figure/figcaption/div/ul/li[1]/text()')
@@ -107,7 +107,7 @@ def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt
             "apt_num":    apt_num, 
             "apt_type":   apt_type,
             "apt_size":   apt_size,
-            "apt_price":  apt_price,
+            "apt_prices": apt_price,
             "apt_avl_dt": apt_avl_dt
     }
     r = requests.post(

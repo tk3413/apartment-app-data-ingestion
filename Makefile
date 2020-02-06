@@ -3,7 +3,7 @@ APPNAME=di-vita
 TAG=latest
 
 fetch:
-	python di-vita.py
+	python3 ${APPNAME}.py
 
 docker-image:
 	docker build --rm -t ${DOCKERUSERNAME}/${APPNAME}:${TAG} .
