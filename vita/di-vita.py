@@ -8,7 +8,6 @@ import requests
 import resource
 import time
 
-from ast import literal_eval
 from datetime import datetime
 from lxml import html
 
@@ -111,8 +110,8 @@ def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt
             "apt_avl_dt": apt_avl_dt
     }
     r = requests.post(
-        "http://apartment-app-1265692259.us-east-1.elb.amazonaws.com/apartments", 
-        # "http://localhost:3000/apartments",
+        # "http://apartment-app-1265692259.us-east-1.elb.amazonaws.com/apartments", 
+        "http://localhost:3000/apartments",
         data = json.dumps(payload),
         headers = headers
     )
@@ -141,7 +140,6 @@ while(current_page_num <= total_num_pages):
     full_path = base_url + default_query_params + page_param
     page = requests.get(full_path)
     tree = html.fromstring(page.content)
-    print('hello')
     # 6 items per page, range of required values = [2, 7]
     item_num = 2
     
