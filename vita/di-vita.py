@@ -64,7 +64,7 @@ def apt_avail_dt_format(tree, item_num):
     return str(apt_avail_dt_cleaned.strip())
 
 def vita_page_format(tree): 
-    path_num_pages = tree.xpath('/html/body/div/div[2]/div/section[2]/div[4]/div/div[8]/span/span/text()')
+    path_num_pages = tree.xpath('/html/body/div/div[3]/div/div/section[2]/div[6]/div/div[8]/span/span/text()')
     total_num_pages = path_num_pages[0].strip()[10]
     return int(total_num_pages)
 
@@ -73,7 +73,7 @@ def formatter(format_type, tree, item_num):
         'TOTAL_PG':     vita_page_format(tree),
         'APT_NUM':      apt_num_format(tree, item_num),
         'APT_TYPE':     apt_type_format(tree, item_num),
-        'APT_SIZE':     apt_size_format(tree, item_num),
+            'APT_SIZE':     apt_size_format(tree, item_num),
         'APT_PRICE':    apt_price_format(tree, item_num),
         'APT_AVAIL_DT': apt_avail_dt_format(tree, item_num)
     }.get(format_type, "Invalid format_type")
@@ -110,8 +110,8 @@ def send_to_server(apt_nm_cd, apt_num, apt_type, apt_size, apt_price, apt_avl_dt
             "apt_avl_dt": apt_avl_dt
     }
     r = requests.post(
-        # "http://apartment-app-1265692259.us-east-1.elb.amazonaws.com/apartments", 
-        "http://localhost:3000/apartments",
+        "http://apartment-app-136923966.us-east-1.elb.amazonaws.com/apartments",
+        #"http://localhost:3000/apartments",
         data = json.dumps(payload),
         headers = headers
     )
